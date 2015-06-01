@@ -5,7 +5,6 @@ namespace Omnipay\Sips\Message;
 use Guzzle\Http\ClientInterface;
 use Omnipay\Common\Message\AbstractRequest;
 use Omnipay\Sips\Merchant;
-
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
@@ -25,7 +24,33 @@ abstract class SipsBinaryCall extends AbstractRequest
      */
     protected $merchant;
 
+    /**
+     * The additional data
+     *
+     * @var string
+     */
+    protected $sipsAdditionalData;
+
     #region merchant setters
+    /**
+     * The path of the folder containing
+     * the Sips files (binaries, params...)
+     *
+     * @var string
+     */
+    protected $sipsFolderPath;
+
+    /**
+     * Create a new Request
+     *
+     * @param ClientInterface $httpClient A Guzzle client to make API calls with
+     * @param HttpRequest $httpRequest A Symfony HTTP request object
+     */
+    public function __construct(ClientInterface $httpClient, HttpRequest $httpRequest)
+    {
+        parent::__construct($httpClient, $httpRequest);
+        $this->merchant = new Merchant();
+    }
 
     /**
      * Sets the merchant id
@@ -36,6 +61,31 @@ abstract class SipsBinaryCall extends AbstractRequest
     {
         $this->merchant->setId($merchantId);
     }
+
+    /**
+     * Sets additional data
+     *
+     * @param string $data
+     * @return $this
+     */
+    public function setSipsAdditionalData($sipsAdditionalData)
+    {
+        $this->sipsAdditionalData = $sipsAdditionalData;
+
+        return $this;
+    }
+
+    /**
+     * Gets additional data
+     *
+     * @return string
+     */
+    public function getSipsAdditionalData()
+    {
+        return $this->sipsAdditionalData;
+    }
+
+    #endregion
 
     /**
      * Sets the merchant language
@@ -57,8 +107,6 @@ abstract class SipsBinaryCall extends AbstractRequest
         $this->merchant->setCountry($merchantCountry);
     }
 
-    #endregion
-
     /**
      * Gets the merchant information
      *
@@ -70,12 +118,15 @@ abstract class SipsBinaryCall extends AbstractRequest
     }
 
     /**
-     * The path of the folder containing
+     * Gets the path of the folder containing
      * the Sips files (binaries, params...)
      *
-     * @var string
+     * @return string
      */
-    protected $sipsFolderPath;
+    public function getSipsFolderPath()
+    {
+        return $this->sipsFolderPath;
+    }
 
     /**
      * Sets The path of the folder containing
@@ -86,17 +137,6 @@ abstract class SipsBinaryCall extends AbstractRequest
     public function setSipsFolderPath($sipsFolderPath)
     {
         $this->sipsFolderPath = $sipsFolderPath;
-    }
-
-    /**
-     * Gets the path of the folder containing
-     * the Sips files (binaries, params...)
-     *
-     * @return string
-     */
-    public function getSipsFolderPath()
-    {
-        return $this->sipsFolderPath;
     }
 
     /**
@@ -130,6 +170,14 @@ abstract class SipsBinaryCall extends AbstractRequest
     }
 
     /**
+     * @return mixed
+     */
+    public function getReturnContext()
+    {
+        return $this->returnContext;
+    }
+
+    /**
      * @param mixed $returnContext
      *
      * @return SipsBinaryCall
@@ -139,26 +187,6 @@ abstract class SipsBinaryCall extends AbstractRequest
         $this->returnContext = $returnContext;
 
         return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReturnContext()
-    {
-        return $this->returnContext;
-    }
-
-    /**
-     * Create a new Request
-     *
-     * @param ClientInterface $httpClient  A Guzzle client to make API calls with
-     * @param HttpRequest $httpRequest A Symfony HTTP request object
-     */
-    public function __construct(ClientInterface $httpClient, HttpRequest $httpRequest)
-    {
-        parent::__construct($httpClient, $httpRequest);
-        $this->merchant = new Merchant();
     }
 
     /**

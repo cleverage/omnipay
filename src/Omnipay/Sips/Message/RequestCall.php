@@ -70,7 +70,8 @@ class RequestCall extends SipsBinaryCall
 
             'cancel_return_url' => $this->getCancelUrl(),
             'automatic_response_url' => $this->getNotifyUrl(),
-            'normal_return_url' => $this->getReturnUrl()
+            'normal_return_url' => $this->getReturnUrl(),
+            'data' => $this->getSipsAdditionalData()
         );
 
         $response = array();
